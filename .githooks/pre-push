@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+# ==============================================================================
+# Git Pre-Push Hook
+# Runs Jest test suite automatically before 'git push'.
+# If any test fails, push is immediately aborted.
+# ==============================================================================
+
+echo "========================================================"
+echo " [Git Pre-Push Hook] Running Jest Test Suite... "
+echo "========================================================"
+
+npm test
+
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "========================================================"
+    echo " [ERROR] Git push BLOCKED!"
+    echo " One or more Jest tests failed. Fix failing tests first."
+    echo "========================================================"
+    exit 1
+fi
+
+echo ""
+echo "========================================================"
+echo " [SUCCESS] All Jest tests passed! Proceeding with push."
+echo "========================================================"
+exit 0

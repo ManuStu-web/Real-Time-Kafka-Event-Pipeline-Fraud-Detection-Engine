@@ -1,0 +1,133 @@
+{
+  "info": {
+    "_postman_id": "7a35e80d-85fa-42f2-95f0-62e0f80bc41d",
+    "name": "Kafka Event Pipeline API",
+    "description": "Postman Collection for testing the Kafka Event Pipeline Express.js REST API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "2. Ingest Normal Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_101\",\n  \"productName\": \"Wireless Mechanical Keyboard\",\n  \"category\": \"Electronics\",\n  \"quantity\": 1,\n  \"pricePerUnit\": 89.99,\n  \"totalAmount\": 89.99,\n  \"currency\": \"USD\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      }
+    },
+    {
+      "name": "3. Ingest High-Value Fraud Alert Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_102\",\n  \"productName\": \"Luxury Swiss Chronograph Watch\",\n  \"category\": \"Luxury\",\n  \"quantity\": 2,\n  \"pricePerUnit\": 2400.00,\n  \"totalAmount\": 4800.00,\n  \"currency\": \"USD\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      }
+    },
+    {
+      "name": "4. Ingest Malformed Order (DLQ Trigger)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productName\": \"Broken Order Without User ID\",\n  \"pricePerUnit\": -50.00\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      }
+    },
+    {
+      "name": "5. Trigger Batch Generation Stream",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"count\": 10,\n  \"delayMs\": 250,\n  \"anomalyRate\": 0.3\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/generate",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders", "generate"]
+        }
+      }
+    },
+    {
+      "name": "6. Query Processed Orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders?limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"],
+          "query": [
+            { "key": "limit", "value": "20" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7. Query Real-Time Pipeline Metrics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/metrics",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "metrics"]
+        }
+      }
+    },
+    {
+      "name": "8. Query Dead Letter Queue (DLQ)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dlq",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dlq"]
+        }
+      }
+    }
+  ]
+}

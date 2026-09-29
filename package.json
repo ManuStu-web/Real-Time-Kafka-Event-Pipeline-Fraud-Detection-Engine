@@ -1,0 +1,48 @@
+{
+  "name": "kafka-event-pipeline",
+  "version": "1.0.0",
+  "description": "Distributed real-time order processing and fraud detection event pipeline using Node.js, Express, Apache Kafka, and KafkaJS.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "producer": "node src/producer.js",
+    "consumer": "node src/consumer.js",
+    "pipeline:demo": "node src/demoRunner.js",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:coverage": "jest --coverage --runInBand --detectOpenHandles",
+    "prepush": "npm test"
+  },
+  "keywords": [
+    "kafka",
+    "kafkajs",
+    "event-driven",
+    "distributed-systems",
+    "express",
+    "docker",
+    "jest"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "kafkajs": "^2.2.4",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js",
+      "!src/demoRunner.js"
+    ]
+  }
+}
