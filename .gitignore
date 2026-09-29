@@ -28,3 +28,8 @@ data/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local Study & Presentation Guides (Kept local, ignored from GitHub)
+PROJECT_EXPLAINED_FROM_ZERO.md
+PRESENTATION_GUIDE.md
+

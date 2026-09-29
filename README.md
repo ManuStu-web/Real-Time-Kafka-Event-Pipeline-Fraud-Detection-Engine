@@ -2,7 +2,7 @@
 
 A production-grade, distributed event-driven data pipeline built with **Node.js**, **Express.js**, **Apache Kafka**, and **KafkaJS**. This system simulates real-time financial and e-commerce transactions, enforces partition-level chronological ordering, applies automated risk evaluation and fraud detection, isolates invalid payloads via a Dead Letter Queue (DLQ), and persists structured events for analytical querying.
 
-[![CI/CD Pipeline](https://github.com/your-username/kafka-event-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/kafka-event-pipeline/actions)
+[![CI/CD Pipeline](https://github.com/ManuStu-web/Real-Time-Kafka-Event-Pipeline-Fraud-Detection-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/ManuStu-web/Real-Time-Kafka-Event-Pipeline-Fraud-Detection-Engine/actions)
 ![Node Version](https://img.shields.io/badge/node-v20%20%7C%20v22-green.svg)
 ![Kafka](https://img.shields.io/badge/Apache_Kafka-3.7_(KRaft)-red.svg)
 ![KafkaJS](https://img.shields.io/badge/Client-KafkaJS-blue.svg)
@@ -23,7 +23,6 @@ A production-grade, distributed event-driven data pipeline built with **Node.js*
 7. [REST API & Postman Testing](#-rest-api--postman-testing)
 8. [Automated Testing & Blocking Failing Pushes](#-automated-testing--blocking-failing-pushes)
 9. [CI/CD with GitHub Actions](#-cicd-with-github-actions)
-10. [Presentation & Interview Cheat Sheet](#-presentation--interview-cheat-sheet)
 
 ---
 
@@ -168,8 +167,7 @@ CCProject/
 ├── docker-compose.yml           # Kafka KRaft + Kafka-UI + API + Consumer stack
 ├── .env.example                 # Template environment variables
 ├── package.json                 # Node dependencies & npm scripts
-├── README.md                    # Project documentation
-└── PRESENTATION_GUIDE.md        # 2-3 minute presentation script & Viva Q&A
+└── README.md                    # Project documentation
 ```
 
 ---
@@ -281,9 +279,3 @@ The repository includes a production CI/CD workflow at `.github/workflows/ci.yml
 3. Runs the Jest test suite with coverage (`npm run test:coverage`).
 4. Executes an end-to-end dry run (`node src/demoRunner.js`).
 5. **Blocks merging/pushing** if any test fails.
-
----
-
-## 🎤 Presentation & Interview Cheat Sheet
-
-A comprehensive, word-for-word **2-3 minute presentation script** and **technical interview Q&A guide** is included in [PRESENTATION_GUIDE.md](PRESENTATION_GUIDE.md).
