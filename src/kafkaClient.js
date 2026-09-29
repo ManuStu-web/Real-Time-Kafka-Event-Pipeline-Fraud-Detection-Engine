@@ -110,14 +110,29 @@ class MockConsumer {
 
 function getKafkaClients(mode = config.kafka.executionMode) {
   if (mode === 'kafka') {
-    const kafka = new Kafka({
+    const kafkaConfig = {
       clientId: config.kafka.clientId,
       brokers: config.kafka.brokers,
       retry: {
         initialRetryTime: 300,
         retries: 5
       }
-    });
+    };
+
+    // Attach SSL & SASL credentials for Cloud Kafka (Upstash, Confluent Cloud, Aiven, AWS MSK)
+    if (config.kafka.ssl) {
+      kafkaConfig.ssl = true;
+    }
+
+    if (config.kafka.sasl && config.kafka.sasl.username) {
+      kafkaConfig.sasl = {
+        mechanism: config.kafka.sasl.mechanism || 'scram-sha-256',
+        username: config.kafka.sasl.username,
+        password: config.kafka.sasl.password
+      };
+    }
+
+    const kafka = new Kafka(kafkaConfig);
 
     return {
       type: 'real',
