@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: kafka-event-pipeline
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: EXECUTION_MODE
+        value: mock
+      - key: KAFKA_TOPIC_ORDERS
+        value: order_events
+      - key: KAFKA_TOPIC_DLQ
+        value: order_dlq
+      - key: FRAUD_THRESHOLD_AMOUNT
+        value: 1000.00
