@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kafka Event Pipeline | Real-Time Fraud Detection Engine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="brand-wrapper">
+        <div class="brand-logo">⚡</div>
+        <div>
+          <h1 class="brand-title">Kafka Event Pipeline</h1>
+          <p class="brand-subtitle">Real-Time Financial Order & Fraud Detection Engine</p>
+        </div>
+      </div>
+
+      <div class="system-status-pills">
+        <div id="systemStatus" class="status-badge">
+          <span class="pulse-dot"></span> Pipeline: Healthy
+        </div>
+        <div id="executionMode" class="status-badge">Mode: MOCK</div>
+        <div id="brokerInfo" class="status-badge">Broker: localhost:9092</div>
+        <button id="togglePollingBtn" class="btn" style="font-size: 0.75rem; padding: 0.35rem 0.75rem;">
+          ⏸️ Pause Polling
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Dashboard -->
+  <main class="main-content">
+
+    <!-- KPI Metrics Section -->
+    <section class="kpi-grid">
+      <div class="kpi-card volume">
+        <div class="kpi-header">
+          <span class="kpi-label">Total Processed</span>
+          <span class="kpi-icon">📦</span>
+        </div>
+        <div id="kpiTotalOrders" class="kpi-value">0</div>
+        <div class="kpi-subtext">Events ingested & consumed</div>
+      </div>
+
+      <div class="kpi-card volume">
+        <div class="kpi-header">
+          <span class="kpi-label">Total Volume</span>
+          <span class="kpi-icon">💰</span>
+        </div>
+        <div id="kpiTotalVolume" class="kpi-value">$0.00</div>
+        <div class="kpi-subtext">Cumulative gross transaction value</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Avg Order Value</span>
+          <span class="kpi-icon">📊</span>
+        </div>
+        <div id="kpiAvgValue" class="kpi-value">$0.00</div>
+        <div class="kpi-subtext">Average basket size</div>
+      </div>
+
+      <div class="kpi-card verified">
+        <div class="kpi-header">
+          <span class="kpi-label">Verified Orders</span>
+          <span class="kpi-icon">✅</span>
+        </div>
+        <div id="kpiVerified" class="kpi-value" style="color: var(--accent-green);">0</div>
+        <div class="kpi-subtext">Passed fraud risk checks</div>
+      </div>
+
+      <div class="kpi-card flagged">
+        <div class="kpi-header">
+          <span class="kpi-label">Flagged / Fraud</span>
+          <span class="kpi-icon">🚩</span>
+        </div>
+        <div id="kpiFlagged" class="kpi-value" style="color: var(--accent-red);">0</div>
+        <div class="kpi-subtext">Amount > $1,000 or Luxury Spike</div>
+      </div>
+
+      <div class="kpi-card dlq">
+        <div class="kpi-header">
+          <span class="kpi-label">Dead Letter Queue</span>
+          <span class="kpi-icon">⚠️</span>
+        </div>
+        <div id="kpiDLQ" class="kpi-value" style="color: var(--accent-amber);">0</div>
+        <div class="kpi-subtext">Malformed / Poison pills caught</div>
+      </div>
+    </section>
+
+    <!-- Controls & Partition Monitoring Row -->
+    <section class="middle-grid">
+      
+      <!-- Interactive Action Center -->
+      <div class="dashboard-panel">
+        <h2 class="panel-title">⚡ Interactive Stream Controller</h2>
+        
+        <div class="controls-layout">
+          <div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">
+              QUICK STREAM GENERATOR
+            </p>
+            <div class="preset-buttons">
+              <button id="btnStream5" class="btn btn-primary">
+                🚀 Stream 5 Orders
+              </button>
+              <button id="btnStream15" class="btn btn-primary">
+                ⚡ Stream 15 Orders
+              </button>
+              <button id="btnStreamSpike" class="btn btn-danger">
+                🔥 Anomaly Fraud Spike
+              </button>
+              <button id="btnSendCorrupt" class="btn" style="border-color: var(--accent-amber); color: var(--accent-amber);">
+                🧪 Test Broken Payload (DLQ)
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Order Form -->
+          <div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">
+              INGEST CUSTOM ORDER EVENT
+            </p>
+            <form id="customOrderForm" class="custom-order-form">
+              <div class="form-group">
+                <label for="formUserId">User ID (Key)</label>
+                <input type="text" id="formUserId" value="user_101" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formProduct">Product</label>
+                <input type="text" id="formProduct" value="Mechanical Keyboard" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formCategory">Category</label>
+                <select id="formCategory">
+                  <option value="Electronics">Electronics</option>
+                  <option value="Luxury">Luxury</option>
+                  <option value="Grocery">Grocery</option>
+                  <option value="Home">Home</option>
+                  <option value="Books">Books</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="formQty">Qty</label>
+                <input type="number" id="formQty" min="1" max="10" value="1" required>
+              </div>
+
+              <div class="form-group">
+                <label for="formPrice">Unit Price ($)</label>
+                <input type="number" id="formPrice" step="0.01" min="1" value="125.00" required>
+              </div>
+
+              <div class="form-group" style="align-self: flex-end;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                  Publish Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partition Load Distribution -->
+      <div class="dashboard-panel">
+        <h2 class="panel-title">🔀 Partition Distribution (Key Hashing)</h2>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Shows how <code>userId</code> partition keys guarantee per-customer FIFO ordering across topic partitions.
+        </p>
+
+        <div class="partition-container">
+          <div class="partition-bar-group">
+            <div class="partition-bar-header">
+              <span>Partition 0</span>
+              <span id="p0Percent">0% (0)</span>
+            </div>
+            <div class="progress-track">
+              <div id="p0Fill" class="progress-fill fill-p0" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="partition-bar-group">
+            <div class="partition-bar-header">
+              <span>Partition 1</span>
+              <span id="p1Percent">0% (0)</span>
+            </div>
+            <div class="progress-track">
+              <div id="p1Fill" class="progress-fill fill-p1" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="partition-bar-group">
+            <div class="partition-bar-header">
+              <span>Partition 2</span>
+              <span id="p2Percent">0% (0)</span>
+            </div>
+            <div class="progress-track">
+              <div id="p2Fill" class="progress-fill fill-p2" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.2rem; font-size: 0.74rem; color: var(--text-dim); background-color: var(--bg-surface); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          💡 <strong>Kafka Principle</strong>: <code>Partition = hash(userId) % 3</code>. All orders for the same user land in the identical partition, eliminating out-of-order race conditions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Real-Time Event Stream Table Section -->
+    <section class="table-section">
+      <div class="tabs-header">
+        <div class="tab-nav">
+          <button id="tabOrders" class="tab-btn active">📦 Real-Time Order Stream</button>
+          <button id="tabDLQ" class="tab-btn">⚠️ Dead Letter Queue (DLQ)</button>
+        </div>
+
+        <div class="table-toolbar">
+          <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search Order / User...">
+          <select id="statusFilterSelect" class="search-input" style="width: auto;">
+            <option value="ALL">All Statuses</option>
+            <option value="VERIFIED">Verified Only</option>
+            <option value="FLAGGED_HIGH_VALUE">Flagged Fraud Only</option>
+            <option value="REQUIRES_REVIEW">Requires Review</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div id="ordersTableWrapper" class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User (Key)</th>
+              <th>Product / Category</th>
+              <th>Amount</th>
+              <th>Partition</th>
+              <th>Risk Score</th>
+              <th>Status</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr>
+              <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                Listening for incoming Kafka events... Click "Stream 5 Orders" to test!
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DLQ Table (Initially Hidden) -->
+      <div id="dlqTableWrapper" class="table-wrapper" style="display: none;">
+        <table>
+          <thead>
+            <tr>
+              <th>DLQ ID</th>
+              <th>Error Reason</th>
+              <th>Partition</th>
+              <th>Raw Payload</th>
+              <th>Failed At</th>
+            </tr>
+          </thead>
+          <tbody id="dlqTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                No poison pills or malformed messages in Dead Letter Queue.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Event JSON Inspector -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title">Event Metadata</h3>
+        <button id="modalCloseBtn" class="close-btn">&times;</button>
+      </div>
+      <pre id="modalJsonViewer" class="json-viewer"></pre>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    Real-Time Kafka Event Pipeline & Fraud Engine • Built with Node.js, Express, Apache Kafka, KafkaJS, Jest & Docker
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

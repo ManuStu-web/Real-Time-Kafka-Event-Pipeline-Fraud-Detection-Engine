@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const config = require('./config');
@@ -8,6 +9,9 @@ function createApp(producerInstance = null) {
   const app = express();
   app.use(cors());
   app.use(express.json());
+
+  // Serve static frontend files from /public
+  app.use(express.static(path.join(__dirname, '../public')));
 
   const producer = producerInstance || new OrderProducer();
 

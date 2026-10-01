@@ -144,6 +144,10 @@ CCProject/
 ├── postman/
 │   ├── Kafka_Event_Pipeline.postman_collection.json  # 8 Pre-configured API tests
 │   └── Kafka_Event_Pipeline.postman_environment.json # Postman Environment (baseUrl)
+├── public/
+│   ├── index.html               # Real-time Web Dashboard UI
+│   ├── style.css                # Dark-mode cloud monitoring stylesheet
+│   └── app.js                   # Live telemetry polling & stream controller
 ├── src/
 │   ├── config.js                # Centralized configuration & environment loader
 │   ├── kafkaClient.js           # KafkaJS client + in-memory simulation engine
@@ -151,7 +155,7 @@ CCProject/
 │   ├── consumer.js              # KafkaJS Consumer with fraud rules & DLQ
 │   ├── processor.js             # Business logic & risk evaluation engine
 │   ├── storage.js               # Idempotent storage manager & real-time metrics
-│   ├── app.js                   # Express.js REST API application
+│   ├── app.js                   # Express.js REST API & static dashboard server
 │   ├── server.js                # HTTP server bootstrap entry point
 │   └── demoRunner.js            # Live interactive demo script with terminal dashboard
 ├── tests/
@@ -174,7 +178,7 @@ CCProject/
 
 ## 🚀 Quick Start & How to Run
 
-### Mode 1: Instant Local Demonstration (Zero Docker Needed)
+### Mode 1: Instant Local Demonstration & Web Dashboard
 This mode runs the entire pipeline locally using our built-in Kafka simulation mode. Perfect for running immediately without installing Docker!
 
 ```bash
@@ -184,13 +188,19 @@ npm install
 # 2. Run the full test suite (18 tests)
 npm test
 
-# 3. Run the interactive live demo with ASCII analytics dashboard
-npm run pipeline:demo
-
-# 4. Start the Express REST API
+# 3. Start the Express Server & Web Dashboard
 npm start
 ```
-The API is now running at `http://localhost:3000`.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser to access the **Interactive Real-Time Web Dashboard**!
+- View live streaming events with partition routing (Partitions 0, 1, 2)
+- Inspect fraud risk scores and alerts in real-time
+- Inject custom order transactions or trigger batch streams with 1 click
+- Test poison-pill isolation in the Dead Letter Queue (DLQ)
+
+*(Optional) You can also run the CLI terminal demonstration:*
+```bash
+npm run pipeline:demo
+```
 
 ---
 
